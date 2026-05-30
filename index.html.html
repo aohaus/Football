@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Football Play Hub 5.0</title>
+<style>
+body{font-family:system-ui;margin:0;background:#0b1d0b;color:white}
+header{background:#1f7a1f;padding:18px;text-align:center;font-size:28px;font-weight:bold}
+.card{background:#163516;margin:12px;padding:14px;border-radius:12px}
+input,select,button{font-size:16px;padding:12px;border-radius:8px;border:none}
+input,select{width:100%;box-sizing:border-box;margin-bottom:8px}
+button{background:#2ecc71;width:100%}
+.chat{height:250px;overflow-y:auto;background:#0a2d20;padding:10px;border-radius:8px}
+.msg{margin:6px 0}
+</style>
+</head>
+<body>
+<header>⚽ Football Play Hub 5.0</header>
+
+<div class="card">
+<h2>🤖 Football Buddy</h2>
+<div id="chat" class="chat"></div>
+<input id="msg" type="text" placeholder="Type here...">
+<button id="sendBtn">Send Message</button>
+</div>
+
+<div class="card">
+<h2>📋 Tactics Adviser</h2>
+<select id="formation">
+<option>4-4-2</option>
+<option>4-3-3</option>
+<option>3-5-2</option>
+</select>
+<select id="style">
+<option>Possession</option>
+<option>Counter Attack</option>
+<option>High Press</option>
+</select>
+<button id="tacticBtn">Get Advice</button>
+<p id="tacticOut"></p>
+</div>
+
+<div class="card">
+<h2>🎯 Drill Maker</h2>
+<select id="skill">
+<option>Passing</option>
+<option>Shooting</option>
+<option>Dribbling</option>
+<option>Defending</option>
+</select>
+<button id="drillBtn">Create Drill</button>
+<p id="drillOut"></p>
+</div>
+
+<script>
+const chat=document.getElementById('chat');
+
+function add(sender,text){
+ const div=document.createElement('div');
+ div.className='msg';
+ div.innerHTML='<b>'+sender+':</b> '+text;
+ chat.appendChild(div);
+ chat.scrollTop=chat.scrollHeight;
+}
+
+add('Football Buddy','Hello! Ask me about football tactics, drills, passing, shooting, dribbling or defending.');
+
+document.getElementById('sendBtn').addEventListener('click',reply);
+
+document.getElementById('msg').addEventListener('keydown',function(e){
+ if(e.key==='Enter') reply();
+});
+
+function reply(){
+ const box=document.getElementById('msg');
+ const q=box.value.trim();
+ if(!q) return;
+
+ add('You',q);
+
+ let t=q.toLowerCase();
+ let r='I focus on football topics. Ask me about tactics, drills or skills.';
+
+ if(t.includes('hello')||t.includes('hi'))
+   r='Hi! ⚽ Nice to meet you. Let\'s focus on football. What would you like help with?';
+ else if(t.includes('pass'))
+   r='Scan the field before receiving and pass with your head up.';
+ else if(t.includes('shoot'))
+   r='Keep balance and strike through the centre of the ball.';
+ else if(t.includes('dribble'))
+   r='Use quick touches and changes of direction.';
+ else if(t.includes('defend'))
+   r='Stay patient and force attackers away from goal.';
+
+ add('Football Buddy',r);
+ box.value='';
+}
+
+document.getElementById('tacticBtn').addEventListener('click',function(){
+ const f=document.getElementById('formation').value;
+ const s=document.getElementById('style').value;
+ document.getElementById('tacticOut').textContent =
+ 'Recommended: '+f+' with '+s+' style. Keep team shape, communicate, and support teammates around the ball.';
+});
+
+document.getElementById('drillBtn').addEventListener('click',function(){
+ const skill=document.getElementById('skill').value;
+ const drills={
+ Passing:'50 one-touch passes in a triangle.',
+ Shooting:'20 shots aimed at the corners.',
+ Dribbling:'Dribble through 8 cones then sprint.',
+ Defending:'Practice 1v1 defending for 10 minutes.'
+ };
+ document.getElementById('drillOut').textContent=drills[skill];
+});
+</script>
+</body>
+</html>
