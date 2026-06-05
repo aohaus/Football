@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>LineApp007 - Japan XI Manager Prediction</title>
+<style>
+:root {
+  --bg:#06102f; --panel:#0d1d54; --text:#f7fbff; --muted:#a8b8dc;
+  --accent:#b9d7ff; --line:rgba(245,250,255,.50); --gold:#ffd166;
+  --danger:#ffb4a8; --green:#b7f7d0; --shadow:0 18px 50px rgba(0,0,0,.35);
+  --hero:linear-gradient(135deg,#304eb5,#06164e);
+  --pitch:linear-gradient(180deg,#183f9a,#071c52);
+  --stripe:rgba(255,255,255,.13);
+}
+body.theme-home-deep { --bg:#020817; --panel:#071433; --accent:#c1ceff; --muted:#9da9ce; --hero:linear-gradient(135deg,#102e78,#020817); --pitch:linear-gradient(180deg,#102e78,#04102e); }
+body.theme-away-white { --bg:#f5f2e9; --panel:#fffdf7; --text:#121212; --muted:#62605a; --accent:#111; --line:rgba(0,0,0,.34); --hero:linear-gradient(135deg,#fffdf7,#e8e1d2); --pitch:linear-gradient(180deg,#f8f5ed,#dfd8c9); --stripe:rgba(0,0,0,.07); }
+body.theme-away-lines { --bg:#fbf7ee; --panel:#fffefa; --text:#141414; --muted:#69645a; --accent:#222; --line:rgba(0,0,0,.34); --hero:linear-gradient(135deg,#fffdf7,#ede4d3); --pitch:linear-gradient(100deg, transparent 0 16%, rgba(226,57,67,.25) 16.3% 16.8%, transparent 17.2% 35%, rgba(30,133,222,.25) 35.4% 36%, transparent 36.3% 58%, rgba(30,170,115,.25) 58.4% 59%, transparent 59.3% 80%, rgba(20,20,20,.22) 80.3% 80.8%, transparent 81.2% 100%),linear-gradient(180deg,#fffdf7,#e6dfd0); }
+body.theme-samurai-mix { --bg:#07102c; --panel:#0c183e; --accent:#d6e8ff; --hero:linear-gradient(135deg,#1d48b6,#fffdf7); --pitch:linear-gradient(100deg, transparent 0 18%, rgba(255,255,255,.18) 18.3% 19%, transparent 19.4% 42%, rgba(255,44,64,.18) 42.3% 42.8%, transparent 43.2% 63%, rgba(70,195,255,.20) 63.3% 63.8%, transparent 64.2% 100%),linear-gradient(180deg,#123c96,#06133c); }
+*{box-sizing:border-box}
+body{margin:0;min-height:100%;padding:16px 12px 36px;background:radial-gradient(circle at 20% 0%,rgba(84,140,255,.25),transparent 35%),var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif}
+.app{max-width:470px;margin:auto}
+header{text-align:center;padding:12px 4px 8px} h1{margin:4px 0;font-size:24px} .sub,.eyebrow{color:var(--muted);font-size:12px} .eyebrow{letter-spacing:.18em;text-transform:uppercase;font-size:11px}
+.card,.hero{background:linear-gradient(180deg,color-mix(in srgb,var(--panel) 94%,white),var(--panel));border:1px solid rgba(255,255,255,.16);border-radius:22px;box-shadow:var(--shadow);padding:14px;margin:12px 0}
+.hero{position:relative;overflow:hidden;background:var(--hero);border-radius:28px}
+.hero:before{content:"";position:absolute;inset:-20px;background:repeating-linear-gradient(165deg,transparent 0 10px,var(--stripe) 11px 12px,transparent 13px 22px);opacity:.8}
+.hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:84px 1fr;gap:12px;align-items:center}
+.avatar{width:78px;height:78px;border-radius:50%;overflow:hidden;border:3px solid rgba(255,255,255,.7);background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900}
+.avatar img{width:100%;height:100%;object-fit:cover;transform:translate(var(--photo-x,0px),var(--photo-y,0px)) scale(var(--photo-scale,1))}
+.hero-name{font-size:22px;font-weight:950;text-shadow:0 2px 10px rgba(0,0,0,.25)} .hero-role{font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.85;margin-top:3px}
+.title{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:900;color:var(--accent);margin-bottom:10px;letter-spacing:.04em}
+.badge{font-size:10px;background:var(--accent);color:var(--bg);border-radius:999px;padding:3px 8px;font-weight:900}
+label{display:block;font-size:11px;color:var(--muted);margin:0 0 5px}
+input,select,button{width:100%;border:1px solid rgba(127,153,170,.3);background:rgba(4,14,24,.82);color:var(--text);border-radius:13px;padding:10px;font-size:15px;outline:none}
+.theme-away-white input,.theme-away-white select,.theme-away-lines input,.theme-away-lines select{background:rgba(255,255,255,.85);color:#111;border-color:rgba(0,0,0,.18)}
+button{background:linear-gradient(180deg,#c9ffdc,#8eeab4);color:#062014;border:0;font-weight:900;cursor:pointer} .ghost{background:rgba(255,255,255,.08);color:var(--text);border:1px solid rgba(255,255,255,.18);box-shadow:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px} .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.pitch{position:relative;min-height:570px;border-radius:24px;overflow:hidden;background:linear-gradient(90deg,rgba(255,255,255,.035) 50%,transparent 50%) 0 0/92px 100%,radial-gradient(ellipse at center,rgba(255,255,255,.14),transparent 55%),var(--pitch);border:2px solid var(--line)}
+.pitch:before{content:"";position:absolute;inset:18px;border:1.5px solid var(--line);border-radius:18px;pointer-events:none}
+.halfline{position:absolute;left:18px;right:18px;top:50%;height:1px;background:var(--line)} .circle{position:absolute;left:50%;top:50%;width:112px;height:112px;transform:translate(-50%,-50%);border:1px solid var(--line);border-radius:50%}
+.goal,.penalty{position:absolute;left:50%;transform:translateX(-50%);border:1.5px solid var(--line);z-index:1} .goal.top{top:18px;width:38%;height:44px;border-top:none} .penalty.top{top:18px;width:62%;height:90px;border-top:none} .goal.bottom{bottom:18px;width:38%;height:44px;border-bottom:none} .penalty.bottom{bottom:18px;width:62%;height:90px;border-bottom:none}
+.spot{position:absolute;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--line);z-index:1} .spot.top{top:108px} .spot.bottom{bottom:108px}
+.slot{position:absolute;transform:translate(-50%,-50%);width:31%;z-index:2} .slot select{text-align:center;font-weight:800;font-size:13px;padding:8px 4px;min-height:40px} .pos{display:inline-block;font-size:9px;color:var(--bg);background:var(--accent);padding:2px 6px;border-radius:999px;font-weight:900;margin-bottom:3px}
+.slot.captain select{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,209,102,.25),0 0 18px rgba(255,209,102,.25)} .capline{margin-top:9px;padding:10px 12px;border-radius:16px;background:rgba(255,209,102,.11);border:1px solid rgba(255,209,102,.22);font-size:13px;font-weight:900;color:color-mix(in srgb,var(--text) 92%,var(--gold))}
+.subrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end;background:rgba(5,20,14,.25);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:10px;margin-bottom:8px}
+.out label{color:var(--danger)} .in label{color:var(--green)}
+.total{text-align:center;padding:12px;border-radius:16px;background:rgba(7,22,17,.24);border:1px solid rgba(255,255,255,.12);font-size:28px;font-weight:950;letter-spacing:.08em}
+.roster{display:grid;gap:8px} .roster-section{font-size:12px;font-weight:950;color:var(--accent);margin:10px 0 2px} .player-card{display:grid;grid-template-columns:44px 1fr;gap:9px;align-items:center;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.055);border-radius:14px;padding:8px} .num{font-size:17px;font-weight:950;text-align:center;color:var(--accent)} .pname{font-weight:900;font-size:14px} .meta{font-size:11px;color:var(--muted);line-height:1.35} .selected{opacity:.42;filter:grayscale(.5)} .selected .pname:after{content:"  選択済";font-size:10px;color:var(--gold)}
+.warning{display:none;margin-top:8px;background:#ffd1c9;color:#3b170f;border-radius:12px;padding:9px 10px;font-size:12px;font-weight:800}
+.summary{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.6;background:rgba(0,0,0,.24);border-radius:16px;padding:12px;max-height:320px;overflow:auto}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px} .note{font-size:11px;color:var(--muted);line-height:1.5;margin-top:8px}
+@media(max-width:390px){.slot{width:34%}.slot select{font-size:12px}.pitch{min-height:545px}}
+</style>
+</head>
+<body class="theme-home-blue">
+<div class="app">
+<header><div class="eyebrow">SAMURAI BLUE LINEUP LAB</div><h1>Japan vs Netherlands</h1><div class="sub">LineApp007 · Manager XI / Substitution / Roster</div></header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="avatar" id="avatar"><span>監</span></div>
+    <div><div class="hero-name" id="heroName">森保一 監督</div><div class="hero-role">You are the manager</div><div class="hero-role" id="heroTheme">Home Blue</div></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="title">Starting XI <span class="badge">背番号＋苗字</span></div>
+  <div class="grid2">
+    <div><label>フォーメーション</label><select id="formation"></select></div>
+    <div><label>キャプテン</label><select id="captain"></select></div>
+  </div>
+  <div class="warning" id="warning"></div>
+  <div class="capline" id="capline">© Captain: 未選択</div>
+  <div style="height:10px"></div>
+  <div class="pitch" id="pitch">
+    <div class="halfline"></div><div class="circle"></div>
+    <div class="penalty top"></div><div class="goal top"></div><div class="spot top"></div>
+    <div class="penalty bottom"></div><div class="goal bottom"></div><div class="spot bottom"></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="title">交代予想 <span class="badge">OUT → IN</span></div>
+  <div id="subs"></div>
+  <div class="note">分数は入れず、誰を下げて誰を入れるかに集中する版です。</div>
+</section>
+
+<section class="card">
+  <div class="title">基本設定 <span class="badge">Manager</span></div>
+  <div class="grid2">
+    <div><label>監督名</label><input id="managerName" placeholder="森保一"></div>
+    <div><label>背景テーマ</label><select id="theme">
+      <option value="theme-home-blue">Home Blue</option>
+      <option value="theme-home-deep">Home Deep Blue</option>
+      <option value="theme-away-white">Away White</option>
+      <option value="theme-away-lines">Away Line Art</option>
+      <option value="theme-samurai-mix">Samurai Mix</option>
+    </select></div>
+  </div>
+  <div style="height:10px"></div>
+  <label>監督写真アップロード</label><input id="photo" type="file" accept="image/*">
+  <div class="grid3" style="margin-top:10px">
+    <div><label>拡大</label><input id="photoScale" type="range" min="1" max="2.2" step="0.05" value="1"></div>
+    <div><label>左右</label><input id="photoX" type="range" min="-40" max="40" step="1" value="0"></div>
+    <div><label>上下</label><input id="photoY" type="range" min="-40" max="40" step="1" value="0"></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="title">試合結果予想 <span class="badge">Score</span></div>
+  <div class="grid2">
+    <div><label>前半 日本</label><input id="fhJ" type="number" min="0" value="0"></div>
+    <div><label>前半 オランダ</label><input id="fhN" type="number" min="0" value="0"></div>
+    <div><label>後半 日本</label><input id="shJ" type="number" min="0" value="0"></div>
+    <div><label>後半 オランダ</label><input id="shN" type="number" min="0" value="0"></div>
+  </div>
+  <div style="height:10px"></div><div class="total" id="scoreTotal">日本 0 - 0 オランダ</div>
+</section>
+
+<section class="card">
+  <div class="title">招集メンバー <span class="badge">Info</span></div>
+  <div class="roster" id="roster"></div>
+</section>
+
+<section class="card">
+  <div class="title">提出カード <span class="badge">Copy</span></div>
+  <div class="summary" id="summary"></div>
+  <div class="actions"><button id="copyBtn">Copy Text</button><button class="ghost" id="resetBtn">Reset</button></div>
+</section>
+</div>
+
+<script>
+const players = [{"no": "1", "full": "鈴木 彩艶", "short": "鈴木彩", "group": "GK", "pos": "GK", "club": "パルマ・カルチョ", "flag": "🇮🇹", "note": ""}, {"no": "12", "full": "大迫 敬介", "short": "大迫", "group": "GK", "pos": "GK", "club": "サンフレッチェ広島", "flag": "🇯🇵", "note": ""}, {"no": "23", "full": "早川 友基", "short": "早川", "group": "GK", "pos": "GK", "club": "鹿島アントラーズ", "flag": "🇯🇵", "note": ""}, {"no": "2", "full": "菅原 由勢", "short": "菅原", "group": "DF", "pos": "RWB/RB", "club": "ヴェルダー・ブレーメン", "flag": "🇩🇪", "note": ""}, {"no": "3", "full": "谷口 彰悟", "short": "谷口", "group": "DF", "pos": "CB", "club": "シントトロイデンVV", "flag": "🇧🇪", "note": ""}, {"no": "4", "full": "板倉 滉", "short": "板倉", "group": "DF", "pos": "CB", "club": "アヤックス", "flag": "🇳🇱", "note": ""}, {"no": "5", "full": "長友 佑都", "short": "長友", "group": "DF", "pos": "LWB/LB", "club": "FC東京", "flag": "🇯🇵", "note": ""}, {"no": "16", "full": "渡辺 剛", "short": "渡辺", "group": "DF", "pos": "CB", "club": "フェイエノールト", "flag": "🇳🇱", "note": ""}, {"no": "20", "full": "瀬古 歩夢", "short": "瀬古", "group": "DF", "pos": "CB", "club": "ル・アーヴルAC", "flag": "🇫🇷", "note": ""}, {"no": "21", "full": "伊藤 洋輝", "short": "伊藤", "group": "DF", "pos": "LCB/LB", "club": "バイエルン・ミュンヘン", "flag": "🇩🇪", "note": ""}, {"no": "22", "full": "冨安 健洋", "short": "冨安", "group": "DF", "pos": "CB/RB", "club": "アヤックス", "flag": "🇳🇱", "note": ""}, {"no": "25", "full": "鈴木 淳之介", "short": "鈴木淳", "group": "DF", "pos": "CB", "club": "FCコペンハーゲン", "flag": "🇩🇰", "note": ""}, {"no": "EX", "full": "吉田 麻也", "short": "吉田", "group": "DF", "pos": "CB", "club": "LAギャラクシー", "flag": "🇺🇸", "note": "追加招集枠"}, {"no": "6", "full": "遠藤 航", "short": "遠藤", "group": "MF", "pos": "DMF", "club": "リバプールFC", "flag": "🇬🇧", "note": ""}, {"no": "7", "full": "田中 碧", "short": "田中", "group": "MF", "pos": "CM", "club": "リーズ・ユナイテッド", "flag": "🇬🇧", "note": ""}, {"no": "15", "full": "鎌田 大地", "short": "鎌田", "group": "MF", "pos": "AMF/CM", "club": "クリスタル・パレス", "flag": "🇬🇧", "note": ""}, {"no": "24", "full": "佐野 海舟", "short": "佐野", "group": "MF", "pos": "DMF/CM", "club": "マインツ05", "flag": "🇩🇪", "note": ""}, {"no": "8", "full": "久保 建英", "short": "久保", "group": "FW", "pos": "シャドー/RW", "club": "レアル・ソシエダード", "flag": "🇪🇸", "note": ""}, {"no": "9", "full": "後藤 啓介", "short": "後藤", "group": "FW", "pos": "CF", "club": "シントトロイデンVV", "flag": "🇧🇪", "note": ""}, {"no": "10", "full": "堂安 律", "short": "堂安", "group": "FW", "pos": "シャドー/RWB", "club": "アイントラハト・フランクフルト", "flag": "🇩🇪", "note": ""}, {"no": "11", "full": "前田 大然", "short": "前田", "group": "FW", "pos": "CF/LW", "club": "セルティック", "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "note": ""}, {"no": "13", "full": "中村 敬斗", "short": "中村", "group": "FW", "pos": "LW/シャドー", "club": "スタッド・ランス", "flag": "🇫🇷", "note": ""}, {"no": "14", "full": "伊東 純也", "short": "伊東", "group": "FW", "pos": "RW/RWB", "club": "KRCゲンク", "flag": "🇧🇪", "note": ""}, {"no": "17", "full": "鈴木 唯人", "short": "鈴木唯", "group": "FW", "pos": "シャドー/AMF", "club": "SCフライブルク", "flag": "🇩🇪", "note": ""}, {"no": "18", "full": "上田 綺世", "short": "上田", "group": "FW", "pos": "CF", "club": "フェイエノールト", "flag": "🇳🇱", "note": ""}, {"no": "19", "full": "小川 航基", "short": "小川", "group": "FW", "pos": "CF", "club": "NECナイメヘン", "flag": "🇳🇱", "note": ""}, {"no": "26", "full": "塩貝 健人", "short": "塩貝", "group": "FW", "pos": "CF", "club": "VfLヴォルフスブルク", "flag": "🇩🇪", "note": ""}];
+const formations = {
+ '3-4-2-1': [['CF',50,10],['ST',35,24],['ST',65,24],['LWB',18,43],['CM',40,46],['CM',60,46],['RWB',82,43],['LCB',28,70],['CB',50,74],['RCB',72,70],['GK',50,91]],
+ '3-4-3': [['LW',25,15],['CF',50,10],['RW',75,15],['LWB',18,43],['CM',40,46],['CM',60,46],['RWB',82,43],['LCB',28,70],['CB',50,74],['RCB',72,70],['GK',50,91]],
+ '3-1-4-2': [['CF',40,12],['CF',60,12],['LM',18,34],['IH',38,37],['IH',62,37],['RM',82,34],['DMF',50,54],['LCB',28,73],['CB',50,77],['RCB',72,73],['GK',50,91]],
+ '4-2-3-1': [['CF',50,10],['LW',25,27],['AMF',50,30],['RW',75,27],['DMF',40,50],['DMF',60,50],['LB',18,72],['CB',40,76],['CB',60,76],['RB',82,72],['GK',50,91]],
+ '4-3-3': [['LW',25,15],['CF',50,10],['RW',75,15],['IH',32,40],['DMF',50,48],['IH',68,40],['LB',18,72],['CB',40,76],['CB',60,76],['RB',82,72],['GK',50,91]],
+ '4-4-2': [['CF',40,12],['CF',60,12],['LM',22,37],['CM',42,45],['CM',58,45],['RM',78,37],['LB',18,72],['CB',40,76],['CB',60,76],['RB',82,72],['GK',50,91]]
+};
+const key='lineapp007';
+const groupOrder=['FW','MF','DF','GK'];
+const byVal=v=>players.find(p=>String(p.no)===String(v));
+const label=p=>p?`${p.no} ${p.short}${p.note?' *':''}`:'';
+const full=p=>p?`${p.no} ${p.short}（${p.pos} / ${p.club}${p.flag}${p.note?' / '+p.note:''}）`:'';
+function selectedValues(){return new Set([...document.querySelectorAll('.playerSelect')].map(s=>s.value).filter(Boolean))}
+function makeOptions(current='', limited=null){
+ let selected=selectedValues(), html='<option value="">未選択</option>';
+ for(const g of groupOrder){
+   const ps=players.filter(p=>p.group===g && (!limited || limited.includes(String(p.no)))).sort((a,b)=>String(a.no).localeCompare(String(b.no),'ja',{numeric:true}));
+   html+=`<optgroup label="--- ${g} ---">`;
+   ps.forEach(p=>{const v=String(p.no), used=selected.has(v)&&v!==String(current); html+=`<option value="${v}" ${used?'disabled':''}>${used?'✓ ':''}${label(p)}　${p.pos}</option>`});
+   html+='</optgroup>';
+ }
+ return html;
+}
+function updateSelectOptions(){
+ document.querySelectorAll('select.playerSelect').forEach(sel=>{const cur=sel.value; const limited=sel.dataset.limited?sel.dataset.limited.split(','):null; sel.innerHTML=makeOptions(cur,limited); sel.value=cur;});
+}
+function renderFormationOptions(){formation.innerHTML=Object.keys(formations).map(f=>`<option>${f}</option>`).join('')}
+function renderPitch(){
+ const prev=[...document.querySelectorAll('.starter')].map(s=>s.value), prevCap=captain.value;
+ pitch.querySelectorAll('.slot').forEach(n=>n.remove());
+ formations[formation.value].forEach((s,i)=>{const [pos,x,y]=s; const d=document.createElement('div'); d.className='slot'; d.style.left=x+'%'; d.style.top=y+'%'; d.innerHTML=`<span class="pos">${pos}</span><select id="starter${i}" class="starter playerSelect" data-pos="${pos}"></select>`; pitch.appendChild(d)});
+ updateSelectOptions(); document.querySelectorAll('.starter').forEach((s,i)=>{if(prev[i]) s.value=prev[i]});
+ captain.value=prevCap; bindStarters(); refresh();
+}
+function bindStarters(){document.querySelectorAll('.starter').forEach(s=>s.onchange=refresh)}
+function getStarters(){return [...document.querySelectorAll('.starter')].map(s=>s.value).filter(Boolean)}
+function refreshCaptain(){
+ const prev=captain.value, starters=getStarters(); captain.innerHTML='<option value="">未選択</option>'+starters.map(v=>`<option value="${v}">${full(byVal(v))}</option>`).join('');
+ if(starters.includes(prev)) captain.value=prev;
+ const c=byVal(captain.value); capline.textContent=c?`© Captain: ${full(c)}`:'© Captain: 未選択';
+ document.querySelectorAll('.slot').forEach(slot=>{const s=slot.querySelector('select'); slot.classList.toggle('captain',s&&s.value===captain.value&&s.value)});
+}
+function renderSubs(){
+ subs.innerHTML='';
+ for(let i=0;i<5;i++){const d=document.createElement('div'); d.className='subrow'; d.innerHTML=`<div class="out"><label>OUT ${i+1}</label><select id="subOut${i}" class="playerSelect subOut"></select></div><div class="in"><label>IN ${i+1}</label><select id="subIn${i}" class="playerSelect"></select></div>`; subs.appendChild(d)}
+}
+function refreshSubOut(){
+ const starters=getStarters();
+ document.querySelectorAll('.subOut').forEach(sel=>{const cur=sel.value; sel.dataset.limited=starters.join(','); sel.innerHTML=makeOptions(cur,starters); if(starters.includes(cur)) sel.value=cur;});
+}
+function refreshScore(){const n=id=>Math.max(0,parseInt(document.getElementById(id).value||'0',10)); scoreTotal.textContent=`日本 ${n('fhJ')+n('shJ')} - ${n('fhN')+n('shN')} オランダ`;}
+function renderRoster(){
+ const sel=selectedValues(); roster.innerHTML='';
+ for(const g of groupOrder){
+   const h=document.createElement('div'); h.className='roster-section'; h.textContent=g; roster.appendChild(h);
+   players.filter(p=>p.group===g).sort((a,b)=>String(a.no).localeCompare(String(b.no),'ja',{numeric:true})).forEach(p=>{const d=document.createElement('div'); d.className='player-card '+(sel.has(String(p.no))?'selected':''); d.innerHTML=`<div class="num">${p.no}</div><div><div class="pname">${p.full}</div><div class="meta">${p.pos} / ${p.club} ${p.flag}${p.note?' / '+p.note:''}</div></div>`; roster.appendChild(d)});
+ }
+}
+function updateHero(){
+ const name=managerName.value.trim()||'森保一'; heroName.textContent=name+' 監督';
+ const t=theme.options[theme.selectedIndex]?.text||'Home Blue'; heroTheme.textContent=t; document.body.className=theme.value;
+}
+function updatePhoto(){document.documentElement.style.setProperty('--photo-scale',photoScale.value);document.documentElement.style.setProperty('--photo-x',photoX.value+'px');document.documentElement.style.setProperty('--photo-y',photoY.value+'px')}
+function summaryText(){
+ const name=managerName.value.trim()||'森保一', f=formation.value, c=byVal(captain.value);
+ const n=id=>Math.max(0,parseInt(document.getElementById(id).value||'0',10));
+ const xi=[...document.querySelectorAll('.starter')].map(s=>`${s.dataset.pos}: ${label(byVal(s.value))||'-'}${s.value&&s.value===captain.value?' ©':''}`).join('\n');
+ let sub=[]; for(let i=0;i<5;i++){const o=byVal(document.getElementById('subOut'+i).value), inn=byVal(document.getElementById('subIn'+i).value); if(o||inn) sub.push(`${label(o)||'-'} → ${label(inn)||'-'}`)}
+ return `${name}監督 XI\n\nFormation: ${f}\n\nPrediction:\n前半 日本 ${n('fhJ')}-${n('fhN')} オランダ\n後半 日本 ${n('shJ')}-${n('shN')} オランダ\n合計 日本 ${n('fhJ')+n('shJ')}-${n('fhN')+n('shN')} オランダ\n\nCaptain:\n${c?full(c):'-'}\n\nStarting XI:\n${xi}\n\nSubstitutions:\n${sub.length?sub.join('\n'):'-'}`;
+}
+function refresh(){updateSelectOptions(); refreshCaptain(); refreshSubOut(); refreshScore(); renderRoster(); updateHero(); updatePhoto(); summary.textContent=summaryText(); save()}
+function save(){const data={managerName:managerName.value,theme:theme.value,formation:formation.value,starters:[...document.querySelectorAll('.starter')].map(s=>s.value),captain:captain.value,score:['fhJ','fhN','shJ','shN'].reduce((o,id)=>(o[id]=document.getElementById(id).value,o),{}),subs:Array.from({length:5},(_,i)=>({out:document.getElementById('subOut'+i).value,inn:document.getElementById('subIn'+i).value})),photo:avatar.querySelector('img')?.src||'',scale:photoScale.value,x:photoX.value,y:photoY.value}; localStorage.setItem(key,JSON.stringify(data))}
+function load(){try{const d=JSON.parse(localStorage.getItem(key)||'{}'); managerName.value=d.managerName||''; theme.value=d.theme||'theme-home-blue'; formation.value=d.formation||'3-4-2-1'; ['fhJ','fhN','shJ','shN'].forEach(id=>{if(d.score&&d.score[id]!=null) document.getElementById(id).value=d.score[id]}); photoScale.value=d.scale||1; photoX.value=d.x||0; photoY.value=d.y||0; if(d.photo) avatar.innerHTML=`<img src="${d.photo}">`; return d}catch(e){return {}}}
+document.addEventListener('DOMContentLoaded',()=>{
+ renderFormationOptions(); renderSubs(); const d=load(); renderPitch();
+ if(Array.isArray(d.starters)) document.querySelectorAll('.starter').forEach((s,i)=>{if(d.starters[i]) s.value=d.starters[i]});
+ if(Array.isArray(d.subs)) d.subs.forEach((r,i)=>{document.getElementById('subOut'+i).value=r.out||''; document.getElementById('subIn'+i).value=r.inn||''});
+ if(d.captain) captain.value=d.captain;
+ document.querySelectorAll('input,select').forEach(el=>{if(el.id!=='photo') el.addEventListener('input',refresh); el.addEventListener('change',refresh)});
+ formation.addEventListener('change',renderPitch);
+ photo.addEventListener('change',e=>{const file=e.target.files[0]; if(!file)return; const r=new FileReader(); r.onload=()=>{avatar.innerHTML=`<img src="${r.result}">`; refresh()}; r.readAsDataURL(file)});
+ copyBtn.onclick=async()=>{await navigator.clipboard.writeText(summaryText()); copyBtn.textContent='Copied!'; setTimeout(()=>copyBtn.textContent='Copy Text',900)};
+ resetBtn.onclick=()=>{localStorage.removeItem(key); location.reload()};
+ refresh();
+});
+</script>
+</body></html>
