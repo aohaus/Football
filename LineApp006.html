@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>LineApp006 - Japan XI Prediction</title>
+  <style>
+    :root{
+      --bg:#071611;
+      --panel:#0f241b;
+      --panel2:#132c22;
+      --line:#2e6b51;
+      --accent:#b7f7d0;
+      --accent2:#e8fff1;
+      --muted:#8fb5a1;
+      --text:#f4fff8;
+      --danger:#ffb4a8;
+      --gold:#ffd166;
+      --blue:#9dd6ff;
+      --shadow:0 18px 50px rgba(0,0,0,.35);
+      --radius:22px;
+      --pitch1:#14583b;
+      --pitch2:#0c3425;
+      --stripe1:rgba(255,255,255,.035);
+      --themeLine:rgba(229,255,237,.36);
+    }
+    body.theme-home-blue{
+      --bg:#06102b;--panel:#101f55;--panel2:#172b72;--accent:#8fd6ff;--accent2:#eef8ff;--muted:#9eb8df;--pitch1:#1b56b6;--pitch2:#0c286d;--themeLine:rgba(230,242,255,.42);
+      background:radial-gradient(circle at 20% 0%, rgba(67,142,255,.34), transparent 36%),radial-gradient(circle at 85% 10%, rgba(120,184,255,.28), transparent 32%),#06102b;
+    }
+    body.theme-home-deep{
+      --bg:#03091d;--panel:#0a1640;--panel2:#101f59;--accent:#b8d7ff;--accent2:#f4f8ff;--muted:#9aaed0;--pitch1:#123f98;--pitch2:#061d55;--themeLine:rgba(245,250,255,.45);
+      background:linear-gradient(135deg,#020719,#071641 42%,#0b255f);
+    }
+    body.theme-away-white{
+      --bg:#f2f0e9;--panel:#ffffff;--panel2:#f4f4f1;--accent:#0b4db3;--accent2:#111;--muted:#70756e;--text:#111;--pitch1:#f7f7f2;--pitch2:#e8e8e2;--stripe1:rgba(12,77,179,.045);--themeLine:rgba(10,10,10,.28);
+      background:radial-gradient(circle at 20% 0%, rgba(240,74,74,.13), transparent 25%),radial-gradient(circle at 80% 0%, rgba(39,130,215,.15), transparent 26%),#f2f0e9;
+    }
+    body.theme-away-lines{
+      --bg:#fbfaf5;--panel:#ffffff;--panel2:#f5f5ef;--accent:#de3348;--accent2:#111;--muted:#6e7069;--text:#111;--pitch1:#faf9f3;--pitch2:#ecebe4;--stripe1:rgba(0,0,0,.035);--themeLine:rgba(20,20,20,.28);
+      background:
+        linear-gradient(95deg, transparent 0 12%, rgba(222,51,72,.13) 12% 13%, transparent 13% 31%, rgba(39,130,215,.13) 31% 32%, transparent 32% 55%, rgba(31,150,104,.12) 55% 56%, transparent 56% 80%, rgba(241,184,44,.14) 80% 81%, transparent 81%),
+        #fbfaf5;
+    }
+    body.theme-samurai-mix{
+      --bg:#071028;--panel:#0d1c44;--panel2:#14285c;--accent:#ffffff;--accent2:#fff;--muted:#aebbd2;--pitch1:#174da3;--pitch2:#f2f1e9;--stripe1:rgba(255,255,255,.07);--themeLine:rgba(255,255,255,.42);
+      background:linear-gradient(135deg,#06102b 0 38%,#f4f2ea 38% 39%,#be223e 39% 40%,#06102b 40% 70%,#f4f2ea 70%);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif}
+    body{padding:16px 12px 36px}
+    .app{max-width:470px;margin:0 auto}
+    header{padding:14px 4px 10px;text-align:center}
+    .eyebrow{font-size:11px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+    h1{font-size:24px;margin:4px 0 2px;letter-spacing:.02em}
+    .sub{font-size:12px;color:var(--muted)}
+    .card{background:linear-gradient(180deg, color-mix(in srgb, var(--panel) 94%, transparent), color-mix(in srgb, var(--panel2) 86%, #000));border:1px solid color-mix(in srgb, var(--accent) 24%, transparent);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin:12px 0}
+    .card-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;font-weight:800;letter-spacing:.04em;font-size:13px;color:var(--accent2)}
+    .badge{font-size:10px;color:var(--bg);background:var(--accent);padding:3px 8px;border-radius:999px;font-weight:800}
+    label{display:block;font-size:11px;color:var(--muted);margin:0 0 5px}
+    input,select,button{width:100%;border:1px solid color-mix(in srgb, var(--accent) 22%, transparent);background:color-mix(in srgb, var(--bg) 84%, #000);color:var(--text);border-radius:13px;padding:10px 10px;font-size:15px;outline:none}
+    option:disabled{color:#777;background:#ddd}
+    button{cursor:pointer;background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 70%,#fff),var(--accent));color:var(--bg);font-weight:900;border:none;box-shadow:0 10px 22px rgba(81,238,142,.16)}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .manager{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center}
+    .avatarWrap{width:88px;height:88px;border-radius:50%;overflow:hidden;background:rgba(255,255,255,.12);border:2px solid color-mix(in srgb,var(--accent) 40%,transparent);position:relative;margin:auto}
+    #avatarImg{position:absolute;left:50%;top:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1)}
+    .avatarPlaceholder{font-weight:900;position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:11px;text-align:center;padding:8px}
+    .tools{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px}
+    .tools input{padding:7px 6px;font-size:12px}
+    .total{text-align:center;padding:12px;border-radius:16px;background:color-mix(in srgb,var(--bg) 78%,transparent);border:1px solid color-mix(in srgb,var(--accent) 16%,transparent);font-size:28px;font-weight:900;letter-spacing:.08em}
+    .small-note{font-size:11px;color:var(--muted);line-height:1.5;margin-top:8px}
+    .controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .pitch{position:relative;min-height:570px;border-radius:24px;padding:16px 10px;overflow:hidden;background:
+      linear-gradient(90deg, var(--stripe1) 50%, transparent 50%) 0 0/92px 100%,
+      radial-gradient(ellipse at center, color-mix(in srgb,var(--accent) 10%, transparent), transparent 55%),
+      linear-gradient(180deg,var(--pitch1),var(--pitch2));border:2px solid var(--themeLine)}
+    .pitch:before{content:"";position:absolute;inset:18px;border:1px solid var(--themeLine);border-radius:18px;pointer-events:none}
+    .halfline{position:absolute;left:18px;right:18px;top:50%;height:1px;background:var(--themeLine)}
+    .circle{position:absolute;left:50%;top:50%;width:112px;height:112px;transform:translate(-50%,-50%);border:1px solid var(--themeLine);border-radius:50%}
+    .goalBoxTop,.goalBoxBottom,.penaltyTop,.penaltyBottom{position:absolute;left:50%;transform:translateX(-50%);border:1.5px solid var(--themeLine);z-index:1}
+    .goalBoxTop{top:18px;width:38%;height:44px;border-top:none}
+    .penaltyTop{top:18px;width:62%;height:90px;border-top:none}
+    .goalBoxBottom{bottom:18px;width:38%;height:44px;border-bottom:none}
+    .penaltyBottom{bottom:18px;width:62%;height:90px;border-bottom:none}
+    .spotTop,.spotBottom{position:absolute;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--themeLine);z-index:1}
+    .spotTop{top:108px}.spotBottom{bottom:108px}
+    .slot{position:absolute;transform:translate(-50%,-50%);width:31%;z-index:2}
+    .slot select{text-align:center;font-weight:750;font-size:13px;padding:8px 6px;border-radius:14px;background:color-mix(in srgb,var(--bg) 84%,#000);border-color:rgba(235,255,240,.28);min-height:40px}
+    .slot .pos{display:inline-block;font-size:9px;color:var(--bg);background:color-mix(in srgb,var(--accent) 84%,#fff);padding:2px 6px;border-radius:999px;margin-bottom:3px;font-weight:900}
+    .slot.captain select{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,209,102,.18),0 0 22px rgba(255,209,102,.22)}
+    .captain-line{margin-top:9px;padding:10px 12px;border-radius:16px;background:rgba(255,209,102,.10);border:1px solid rgba(255,209,102,.22);font-size:13px;color:color-mix(in srgb,var(--text) 82%,#ffd166);font-weight:800}
+    .subs{display:grid;gap:10px}
+    .subrow{display:grid;grid-template-columns:54px 1fr 1fr;gap:8px;align-items:center;padding:10px;background:color-mix(in srgb,var(--bg) 58%,transparent);border:1px solid color-mix(in srgb,var(--accent) 13%,transparent);border-radius:16px}
+    .minute input{text-align:center;font-weight:900;color:var(--blue);padding:9px 6px}
+    .inout{display:grid;grid-template-columns:1fr;gap:4px}
+    .out label{color:var(--danger)}.in label{color:var(--accent)}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    .ghost{background:rgba(255,255,255,.06);color:var(--text);border:1px solid color-mix(in srgb,var(--accent) 18%,transparent);box-shadow:none}
+    .summary{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.6;color:var(--text);background:color-mix(in srgb,var(--bg) 86%,#000);border-radius:16px;padding:12px;border:1px solid color-mix(in srgb,var(--accent) 14%,transparent);max-height:340px;overflow:auto}
+    .warning{display:none;margin-top:8px;color:#3b170f;background:#ffd1c9;border-radius:12px;padding:9px 10px;font-size:12px;font-weight:800}
+    .footer{color:var(--muted);font-size:10px;text-align:center;padding:10px 6px 0;line-height:1.5}
+    @media (max-width:390px){.pitch{min-height:550px}.slot{width:34%}.slot select{font-size:12px;padding-left:4px;padding-right:4px}.subrow{grid-template-columns:48px 1fr 1fr;gap:6px;padding:8px}input,select{font-size:13px}.manager{grid-template-columns:86px 1fr}.avatarWrap{width:78px;height:78px}}
+  </style>
+</head>
+<body class="theme-home-blue">
+<div class="app">
+  <header>
+    <div class="eyebrow">SAMURAI BLUE LINEUP LAB</div>
+    <h1>Japan vs Netherlands</h1>
+    <div class="sub">LineApp006 · Manager / Theme / XI / Captain / Score / Subs</div>
+  </header>
+
+  <section class="card">
+    <div class="card-title">監督プロフィール <span class="badge">V006</span></div>
+    <div class="manager">
+      <div>
+        <div class="avatarWrap"><div class="avatarPlaceholder" id="avatarPh">監督<br>PHOTO</div><img id="avatarImg" style="display:none"/></div>
+      </div>
+      <div>
+        <label>監督名</label>
+        <input id="owner" placeholder="例：Hayato 監督" />
+        <div style="height:8px"></div>
+        <label>監督写真</label>
+        <input id="avatarFile" type="file" accept="image/*" />
+      </div>
+    </div>
+    <div class="tools">
+      <div><label>拡大</label><input id="avatarScale" type="range" min="1" max="2.6" step="0.05" value="1"></div>
+      <div><label>左右</label><input id="avatarX" type="range" min="-60" max="60" step="1" value="0"></div>
+      <div><label>上下</label><input id="avatarY" type="range" min="-60" max="60" step="1" value="0"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-title">基本設定 <span class="badge">ユニ風テーマ</span></div>
+    <div class="grid2">
+      <div>
+        <label>テーマ</label>
+        <select id="theme">
+          <option value="theme-home-blue">Home Blue</option>
+          <option value="theme-home-deep">Home Deep Blue</option>
+          <option value="theme-away-white">Away White</option>
+          <option value="theme-away-lines">Away Line Art</option>
+          <option value="theme-samurai-mix">Samurai Mix</option>
+        </select>
+      </div>
+      <div>
+        <label>フォーメーション</label>
+        <select id="formation"></select>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-title">試合結果予想 <span class="badge">上部表示</span></div>
+    <div class="grid2">
+      <div><label>前半 日本</label><input id="fhJ" type="number" min="0" value="0" /></div>
+      <div><label>前半 オランダ</label><input id="fhN" type="number" min="0" value="0" /></div>
+      <div><label>後半 日本</label><input id="shJ" type="number" min="0" value="0" /></div>
+      <div><label>後半 オランダ</label><input id="shN" type="number" min="0" value="0" /></div>
+    </div>
+    <div style="height:10px"></div>
+    <div class="total" id="scoreTotal">日本 0 - 0 オランダ</div>
+  </section>
+
+  <section class="card">
+    <div class="card-title">Starting XI <span class="badge">上からFW→GK</span></div>
+    <div class="controls">
+      <div>
+        <label>キャプテン</label>
+        <select id="captain"></select>
+      </div>
+      <div>
+        <label>重複チェック</label>
+        <button class="ghost" id="checkBtn">Check</button>
+      </div>
+    </div>
+    <div class="warning" id="warning"></div>
+    <div class="captain-line" id="captainLine">© Captain: 未選択</div>
+    <div style="height:10px"></div>
+    <div class="pitch" id="pitch">
+      <div class="halfline"></div><div class="circle"></div>
+      <div class="penaltyTop"></div><div class="goalBoxTop"></div><div class="spotTop"></div>
+      <div class="penaltyBottom"></div><div class="goalBoxBottom"></div><div class="spotBottom"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-title">交代予想 <span class="badge">最大5枠</span></div>
+    <div class="subs" id="subs"></div>
+    <div class="small-note">選択済み選手はプルダウン内で薄く表示されます。OUTはスタメン中心、INは全選手から選択できます。</div>
+  </section>
+
+  <section class="card">
+    <div class="card-title">提出カード <span class="badge">Copy</span></div>
+    <div class="summary" id="summary"></div>
+    <div class="actions">
+      <button id="copyBtn">Copy Text</button>
+      <button class="ghost" id="resetBtn">Reset</button>
+    </div>
+  </section>
+
+  <div class="footer">吉田麻也は追加招集の特別枠として追加。Fan-made lineup prediction tool.</div>
+</div>
+
+<script>
+const players = [
+  {no:1, full:'鈴木 彩艶', short:'鈴木彩', group:'GK'},
+  {no:12, full:'大迫 敬介', short:'大迫', group:'GK'},
+  {no:23, full:'早川 友基', short:'早川', group:'GK'},
+  {no:2, full:'菅原 由勢', short:'菅原', group:'DF'},
+  {no:3, full:'谷口 彰悟', short:'谷口', group:'DF'},
+  {no:4, full:'板倉 滉', short:'板倉', group:'DF'},
+  {no:5, full:'長友 佑都', short:'長友', group:'DF'},
+  {no:15, full:'冨安 健洋', short:'冨安', group:'DF'},
+  {no:16, full:'渡辺 剛', short:'渡辺', group:'DF'},
+  {no:20, full:'瀬古 歩夢', short:'瀬古', group:'DF'},
+  {no:21, full:'伊藤 洋輝', short:'伊藤', group:'DF'},
+  {no:22, full:'吉田 麻也', short:'吉田', group:'DF', note:'追加招集'},
+  {no:25, full:'鈴木 淳之介', short:'鈴木淳', group:'DF'},
+  {no:6, full:'遠藤 航', short:'遠藤', group:'MF'},
+  {no:7, full:'田中 碧', short:'田中', group:'MF'},
+  {no:15.1, displayNo:15, full:'鎌田 大地', short:'鎌田', group:'MF', alt:true},
+  {no:24, full:'佐野 海舟', short:'佐野', group:'MF'},
+  {no:8, full:'久保 建英', short:'久保', group:'FW'},
+  {no:9, full:'後藤 啓介', short:'後藤', group:'FW'},
+  {no:10, full:'堂安 律', short:'堂安', group:'FW'},
+  {no:11, full:'前田 大然', short:'前田', group:'FW'},
+  {no:13, full:'中村 敬斗', short:'中村', group:'FW'},
+  {no:14, full:'伊東 純也', short:'伊東', group:'FW'},
+  {no:17, full:'鈴木 唯人', short:'鈴木唯', group:'FW'},
+  {no:18, full:'上田 綺世', short:'上田', group:'FW'},
+  {no:19, full:'小川 航基', short:'小川', group:'FW'},
+  {no:26, full:'塩貝 健人', short:'塩貝', group:'FW'}
+];
+
+const formations = {
+  '3-4-2-1': [['CF',50,10],['ST',35,24],['ST',65,24],['LWB',18,43],['CM',40,46],['CM',60,46],['RWB',82,43],['LCB',28,70],['CB',50,74],['RCB',72,70],['GK',50,91]],
+  '3-4-3': [['LW',25,15],['CF',50,10],['RW',75,15],['LWB',18,43],['CM',40,46],['CM',60,46],['RWB',82,43],['LCB',28,70],['CB',50,74],['RCB',72,70],['GK',50,91]],
+  '3-1-4-2': [['CF',40,12],['CF',60,12],['LM',18,34],['IH',38,37],['IH',62,37],['RM',82,34],['DMF',50,54],['LCB',28,73],['CB',50,77],['RCB',72,73],['GK',50,91]],
+  '4-2-3-1': [['CF',50,10],['LW',25,27],['AMF',50,30],['RW',75,27],['DMF',40,50],['DMF',60,50],['LB',18,72],['CB',40,76],['CB',60,76],['RB',82,72],['GK',50,91]],
+  '4-3-3': [['LW',25,15],['CF',50,10],['RW',75,15],['IH',32,40],['DMF',50,48],['IH',68,40],['LB',18,72],['CB',40,76],['CB',60,76],['RB',82,72],['GK',50,91]],
+  '4-4-2': [['CF',40,12],['CF',60,12],['LM',22,37],['CM',42,45],['CM',58,45],['RM',78,37],['LB',18,72],['CB',40,76],['CB',60,76],['RB',82,72],['GK',50,91]]
+};
+
+const stateKey = 'lineapp006_japan_netherlands';
+const groupOrder = ['FW','MF','DF','GK'];
+const byValue = v => players.find(p=>String(p.no)===String(v));
+function label(p){return p ? `${p.displayNo || p.no} ${p.short}${p.note ? ' *' : ''}` : ''}
+function fullLabel(p){return p ? `${p.displayNo || p.no} ${p.short}（${p.full}${p.note ? ' / '+p.note : ''}）` : ''}
+
+function selectedValues(exceptEl=null){
+  const vals=[...document.querySelectorAll('select.playerSelect')].filter(s=>s!==exceptEl).map(s=>s.value).filter(Boolean);
+  return new Set(vals);
+}
+function makeOptions(includeBlank=true, current='', limited=null){
+  const selected = selectedValues();
+  let html = includeBlank ? '<option value="">未選択</option>' : '';
+  for(const g of groupOrder){
+    const ps = players.filter(p=>p.group===g && (!limited || limited.includes(String(p.no)))).sort((a,b)=>(a.displayNo||a.no)-(b.displayNo||b.no));
+    if(!ps.length) continue;
+    html += `<optgroup label="--- ${g} ---">`;
+    ps.forEach(p=>{
+      const v=String(p.no);
+      const isUsed = selected.has(v) && v !== String(current);
+      html += `<option value="${v}" ${isUsed?'disabled':''}>${isUsed?'✓ ':''}${label(p)}</option>`;
+    });
+    html += '</optgroup>';
+  }
+  return html;
+}
+function updateAllSelectOptions(){
+  document.querySelectorAll('select.playerSelect').forEach(sel=>{
+    const cur=sel.value;
+    const limited = sel.dataset.limited ? sel.dataset.limited.split(',') : null;
+    sel.innerHTML=makeOptions(true,cur,limited);
+    sel.value=cur;
+  });
+}
+function populateFormation(){
+  document.getElementById('formation').innerHTML=Object.keys(formations).map(k=>`<option value="${k}">${k}</option>`).join('');
+}
+function renderPitch(){
+  const pitch=document.getElementById('pitch');
+
+  // Preserve current selections by slot order when the formation changes.
+  // This makes the names visually move with the new formation instead of resetting.
+  const previousStarters = [...document.querySelectorAll('.starter')].map(s=>s.value);
+  const previousCaptain = captain ? captain.value : '';
+
+  pitch.querySelectorAll('.slot').forEach(n=>n.remove());
+  const form=document.getElementById('formation').value;
+  formations[form].forEach((s,i)=>{
+    const [pos,x,y]=s;
+    const div=document.createElement('div');
+    div.className='slot';
+    div.style.left=x+'%'; div.style.top=y+'%';
+    div.innerHTML=`<div class="pos">${pos}</div><select class="starter playerSelect" id="starter${i}" data-pos="${pos}"></select>`;
+    pitch.appendChild(div);
+  });
+
+  updateAllSelectOptions();
+
+  if(previousStarters.length){
+    document.querySelectorAll('.starter').forEach((s,i)=>{ if(previousStarters[i]) s.value=previousStarters[i]; });
+    if(previousCaptain) captain.value = previousCaptain;
+  }else{
+    loadStartersForFormation();
+  }
+
+  bindStarterEvents();
+  refreshAll();
+}
+function getStarters(){return [...document.querySelectorAll('.starter')].map(s=>s.value).filter(Boolean)}
+function refreshCaptain(){
+  const cap=document.getElementById('captain');
+  const prev=cap.value;
+  const starters=getStarters();
+  cap.innerHTML='<option value="">未選択</option>'+starters.map(v=>`<option value="${v}">${fullLabel(byValue(v))}</option>`).join('');
+  if(starters.includes(prev)) cap.value=prev;
+  const selected=byValue(cap.value);
+  document.getElementById('captainLine').textContent=selected ? `© Captain: ${fullLabel(selected)}` : '© Captain: 未選択';
+  document.querySelectorAll('.slot').forEach(slot=>{
+    const sel=slot.querySelector('select');
+    slot.classList.toggle('captain', sel && sel.value && sel.value===cap.value);
+  });
+}
+function refreshScore(){
+  const n=id=>Math.max(0,parseInt(document.getElementById(id).value||'0',10));
+  document.getElementById('scoreTotal').textContent=`日本 ${n('fhJ')+n('shJ')} - ${n('fhN')+n('shN')} オランダ`;
+}
+function renderSubs(){
+  const wrap=document.getElementById('subs'); wrap.innerHTML='';
+  for(let i=0;i<5;i++){
+    const div=document.createElement('div');
+    div.className='subrow';
+    div.innerHTML=`<div class="minute"><label>${i+1}</label><input id="subMin${i}" placeholder="60'" /></div>
+    <div class="inout out"><label>OUT</label><select class="playerSelect subOut" id="subOut${i}"></select></div>
+    <div class="inout in"><label>IN</label><select class="playerSelect" id="subIn${i}"></select></div>`;
+    wrap.appendChild(div);
+  }
+}
+function refreshSubOutOptions(){
+  const starters=getStarters();
+  document.querySelectorAll('.subOut').forEach(sel=>{
+    const cur=sel.value;
+    sel.dataset.limited=starters.join(',');
+    sel.innerHTML=makeOptions(true,cur,starters);
+    if(starters.includes(cur)) sel.value=cur;
+  });
+}
+function checkDuplicates(){
+  const starters=getStarters(), dup=starters.filter((v,i,a)=>a.indexOf(v)!==i);
+  const warn=document.getElementById('warning');
+  if(dup.length){warn.textContent=`重複選択があります：${[...new Set(dup)].map(v=>label(byValue(v))).join('、')}`;warn.style.display='block';return false}
+  if(starters.length<11){warn.textContent=`スタメンが未完成です：${starters.length}/11`;warn.style.display='block';return false}
+  warn.textContent='OK：スタメン11名に重複はありません。';warn.style.display='block';return true;
+}
+function refreshTheme(){
+  document.body.className=document.getElementById('theme').value;
+}
+function refreshAvatar(){
+  const img=document.getElementById('avatarImg');
+  const s=document.getElementById('avatarScale').value;
+  const x=document.getElementById('avatarX').value;
+  const y=document.getElementById('avatarY').value;
+  img.style.transform=`translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${s})`;
+}
+function makeSummary(){
+  const owner=document.getElementById('owner').value||'My 監督';
+  const form=document.getElementById('formation').value;
+  const cap=byValue(document.getElementById('captain').value);
+  const starters=[...document.querySelectorAll('.starter')].map(s=>{
+    const p=byValue(s.value); return p ? `${s.dataset.pos}: ${label(p)}${cap && String(cap.no)===String(p.no)?' ©':''}` : `${s.dataset.pos}: -`;
+  });
+  const n=id=>Math.max(0,parseInt(document.getElementById(id).value||'0',10));
+  const fj=n('fhJ'),fn=n('fhN'),sj=n('shJ'),sn=n('shN');
+  const subs=[];
+  for(let i=0;i<5;i++){
+    const min=document.getElementById(`subMin${i}`).value||'';
+    const out=byValue(document.getElementById(`subOut${i}`).value);
+    const inn=byValue(document.getElementById(`subIn${i}`).value);
+    if(out||inn||min) subs.push(`${min?min+' ':''}${out?label(out):'-'} → ${inn?label(inn):'-'}`);
+  }
+  return `${owner} XI
+
+Formation: ${form}
+
+Prediction:
+前半 日本 ${fj}-${fn} オランダ
+後半 日本 ${sj}-${sn} オランダ
+合計 日本 ${fj+sj}-${fn+sn} オランダ
+
+Captain:
+${cap ? fullLabel(cap) : '-'}
+
+Starting XI:
+${starters.join('\n')}
+
+Substitutions:
+${subs.length ? subs.join('\n') : '-'}
+
+Theme:
+${document.getElementById('theme').selectedOptions[0].text}`;
+}
+function refreshSummary(){document.getElementById('summary').textContent=makeSummary()}
+function saveState(){
+  const data={
+    owner:owner.value, theme:theme.value, formation:formation.value,
+    score:['fhJ','fhN','shJ','shN'].reduce((o,id)=>(o[id]=document.getElementById(id).value,o),{}),
+    starters:[...document.querySelectorAll('.starter')].map(s=>s.value),
+    captain:captain.value,
+    avatar:{src:avatarImg.src||'',display:avatarImg.style.display,scale:avatarScale.value,x:avatarX.value,y:avatarY.value},
+    subs:Array.from({length:5},(_,i)=>({min:document.getElementById(`subMin${i}`).value,out:document.getElementById(`subOut${i}`).value,inn:document.getElementById(`subIn${i}`).value}))
+  };
+  localStorage.setItem(stateKey,JSON.stringify(data));
+}
+function loadState(){
+  try{
+    const data=JSON.parse(localStorage.getItem(stateKey)||'{}');
+    if(data.owner) owner.value=data.owner;
+    if(data.theme) theme.value=data.theme;
+    if(data.formation) formation.value=data.formation;
+    if(data.score) Object.entries(data.score).forEach(([id,v])=>{const el=document.getElementById(id); if(el) el.value=v});
+    if(data.avatar && data.avatar.src){
+      avatarImg.src=data.avatar.src; avatarImg.style.display='block'; avatarPh.style.display='none';
+      avatarScale.value=data.avatar.scale||1; avatarX.value=data.avatar.x||0; avatarY.value=data.avatar.y||0; refreshAvatar();
+    }
+  }catch(e){}
+}
+function loadStartersForFormation(){
+  try{
+    const data=JSON.parse(localStorage.getItem(stateKey)||'{}');
+    if(data.formation !== formation.value) return;
+    if(Array.isArray(data.starters)) document.querySelectorAll('.starter').forEach((s,i)=>{if(data.starters[i]) s.value=data.starters[i]});
+    if(data.captain) captain.value=data.captain;
+    if(Array.isArray(data.subs)) data.subs.forEach((r,i)=>{
+      if(document.getElementById(`subMin${i}`)) document.getElementById(`subMin${i}`).value=r.min||'';
+      if(document.getElementById(`subOut${i}`)) document.getElementById(`subOut${i}`).value=r.out||'';
+      if(document.getElementById(`subIn${i}`)) document.getElementById(`subIn${i}`).value=r.inn||'';
+    });
+  }catch(e){}
+}
+function bindStarterEvents(){document.querySelectorAll('.starter').forEach(s=>s.addEventListener('change',refreshAll))}
+function refreshAll(){
+  refreshTheme(); refreshScore(); updateAllSelectOptions(); refreshCaptain(); refreshSubOutOptions(); refreshSummary(); refreshAvatar(); saveState();
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  populateFormation(); renderSubs(); loadState(); renderPitch(); refreshTheme();
+  formation.addEventListener('change',()=>{renderPitch();refreshAll()});
+  theme.addEventListener('change',refreshAll);
+  captain.addEventListener('change',refreshAll);
+  checkBtn.addEventListener('click',checkDuplicates);
+  ['owner','fhJ','fhN','shJ','shN','avatarScale','avatarX','avatarY'].forEach(id=>document.getElementById(id).addEventListener('input',refreshAll));
+  document.getElementById('subs').addEventListener('input',refreshAll);
+  document.getElementById('subs').addEventListener('change',refreshAll);
+  avatarFile.addEventListener('change',()=>{
+    const file=avatarFile.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=e=>{avatarImg.src=e.target.result;avatarImg.style.display='block';avatarPh.style.display='none';refreshAll()};
+    reader.readAsDataURL(file);
+  });
+  copyBtn.addEventListener('click',async()=>{
+    try{await navigator.clipboard.writeText(makeSummary());copyBtn.textContent='Copied!';setTimeout(()=>copyBtn.textContent='Copy Text',900)}
+    catch(e){alert('コピーできませんでした。提出カードを手動で選択してください。')}
+  });
+  resetBtn.addEventListener('click',()=>{localStorage.removeItem(stateKey);location.reload()});
+  refreshAll();
+});
+</script>
+</body>
+</html>
