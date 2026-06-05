@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Japan vs Netherlands Lineup Builder</title>
+  <style>
+    :root{
+      --bg:#07130f; --panel:#0d2119; --panel2:#102b21; --line:#2e6b50; --accent:#79e6a1; --gold:#e9c46a;
+      --text:#f4fff8; --muted:#a9c7b7; --danger:#ff8f8f; --blue:#7cc7ff;
+      --shadow:0 18px 50px rgba(0,0,0,.32); --r:22px;
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif;background:radial-gradient(circle at 10% 0%,#17442f 0,#07130f 34%,#030705 100%);color:var(--text);}
+    .app{max-width:980px;margin:0 auto;padding:16px 14px 40px}.hero{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;margin-bottom:14px}.title h1{font-size:24px;line-height:1.08;margin:0 0 6px}.title p{margin:0;color:var(--muted);font-size:13px}.badge{font-size:12px;color:#082016;background:linear-gradient(135deg,var(--accent),#c8ffda);padding:8px 10px;border-radius:999px;font-weight:800;white-space:nowrap}.grid{display:grid;grid-template-columns:1fr;gap:14px}@media(min-width:860px){.grid{grid-template-columns:1.2fr .8fr}}
+    .card{background:linear-gradient(180deg,rgba(18,54,40,.94),rgba(9,27,20,.96));border:1px solid rgba(121,230,161,.18);border-radius:var(--r);box-shadow:var(--shadow);padding:14px}.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}.controls label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px}.controls input,.controls select{width:100%;border:1px solid rgba(255,255,255,.12);background:#071912;color:var(--text);border-radius:12px;padding:11px;font-size:16px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tab{border:1px solid rgba(255,255,255,.12);background:#092119;color:var(--muted);border-radius:999px;padding:8px 11px;font-size:13px;font-weight:700}.tab.active{background:var(--accent);color:#082016}.pitch{position:relative;height:610px;overflow:hidden;border-radius:24px;background:linear-gradient(90deg,rgba(255,255,255,.035) 50%,transparent 50%),linear-gradient(180deg,#16633f,#0d432d);background-size:68px 68px,auto;border:2px solid rgba(255,255,255,.24)}
+    .pitch:before{content:"";position:absolute;inset:22px;border:2px solid rgba(255,255,255,.28);border-radius:16px}.pitch:after{content:"";position:absolute;left:50%;top:50%;width:120px;height:120px;margin:-60px 0 0 -60px;border:2px solid rgba(255,255,255,.22);border-radius:50%}.half{position:absolute;left:22px;right:22px;top:50%;border-top:2px solid rgba(255,255,255,.22)}
+    .slot{position:absolute;transform:translate(-50%,-50%);width:30%;min-width:96px;max-width:146px;z-index:2}.slot-label{text-align:center;font-size:10px;color:#ddfff0;text-shadow:0 1px 2px #000;margin-bottom:3px;font-weight:800;letter-spacing:.04em}.slot select{width:100%;appearance:none;border:1px solid rgba(255,255,255,.22);background:rgba(5,20,14,.9);color:white;border-radius:14px;padding:9px 8px;font-size:12px;text-align:center;box-shadow:0 8px 18px rgba(0,0,0,.22)}.slot select.filled{background:linear-gradient(180deg,#eaffef,#9df0b9);color:#082016;font-weight:900}.bench-list,.player-list{display:grid;gap:8px}.row{display:grid;grid-template-columns:54px 1fr auto;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:8px;background:rgba(255,255,255,.04)}.num{font-weight:900;color:var(--gold)}.name{font-weight:800}.club{color:var(--muted);font-size:11px;margin-top:2px}.pos{font-size:10px;border:1px solid rgba(255,255,255,.16);padding:3px 6px;border-radius:999px;color:#d8fff0}.section-title{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px}.section-title h2{font-size:16px;margin:0}.count{color:var(--muted);font-size:12px}.bench{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.bench select{width:100%;border:1px solid rgba(255,255,255,.12);background:#071912;color:white;border-radius:12px;padding:10px 8px;font-size:12px}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.btn{border:0;border-radius:14px;padding:11px 12px;font-weight:900;background:var(--accent);color:#082016}.btn.secondary{background:#143527;color:#dffff0;border:1px solid rgba(255,255,255,.12)}.btn.warn{background:#442223;color:#ffdede;border:1px solid rgba(255,143,143,.28)}.summary{white-space:pre-wrap;background:#071912;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:12px;color:#eaffef;font-size:12px;line-height:1.55}.small{font-size:11px;color:var(--muted);line-height:1.5}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#eaffef;color:#082016;border-radius:999px;padding:10px 14px;font-weight:900;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1}.dup{outline:2px solid var(--danger)!important}.source{margin-top:10px;color:var(--muted);font-size:11px} @media(max-width:520px){.pitch{height:560px}.slot{width:36%;min-width:88px}.bench{grid-template-columns:repeat(2,1fr)}.controls{grid-template-columns:1fr}.title h1{font-size:21px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="hero"><div class="title"><h1>日本 vs オランダ<br>スタメン勝手に考える会</h1><p>参加者ごとにフォーメーション、スタメン11人、控え9人を作成。スマホで選んでスクショ。</p></div><div class="badge">SAMURAI BLUE 26</div></div>
+  <div class="grid">
+    <section class="card">
+      <div class="controls"><div><label>参加者名</label><input id="memberName" placeholder="例：Hayato" /></div><div><label>フォーメーション</label><select id="formation"></select></div></div>
+      <div class="tabs"><button class="tab active" data-view="pitch">ピッチ</button><button class="tab" data-view="bench">控え</button><button class="tab" data-view="summary">発表用</button></div>
+      <div id="pitchView"><div class="pitch" id="pitch"><div class="half"></div></div><div class="buttons"><button class="btn" id="saveBtn">保存</button><button class="btn secondary" id="copyBtn">発表文コピー</button><button class="btn warn" id="resetBtn">リセット</button></div></div>
+      <div id="benchView" style="display:none"><div class="section-title"><h2>控えメンバー</h2><span class="count">最大9人</span></div><div class="bench" id="bench"></div><p class="small">控えはスタメンと重複しないように自動チェックします。完全自由会なのでポジション制限はゆるめです。</p></div>
+      <div id="summaryView" style="display:none"><div class="section-title"><h2>発表用テキスト</h2><span class="count" id="statusCount"></span></div><div class="summary" id="summary"></div></div>
+      <p class="source">選手リスト出典：JFA公式「FIFAワールドカップ2026 招集メンバー/スタッフ」ページ。</p>
+    </section>
+    <aside class="card">
+      <div class="section-title"><h2>招集メンバー</h2><span class="count">GK3 / DF9 / MF-FW14</span></div>
+      <div class="player-list" id="players"></div>
+    </aside>
+  </div>
+</div><div class="toast" id="toast">保存しました</div>
+<script>
+const players=[
+{no:23,name:'早川 友基',pos:'GK',club:'鹿島アントラーズ'},{no:12,name:'大迫 敬介',pos:'GK',club:'サンフレッチェ広島'},{no:1,name:'鈴木 彩艶',pos:'GK',club:'パルマ・カルチョ／イタリア'},
+{no:5,name:'長友 佑都',pos:'DF',club:'FC東京'},{no:3,name:'谷口 彰悟',pos:'DF',club:'シントトロイデンVV／ベルギー'},{no:4,name:'板倉 滉',pos:'DF',club:'アヤックス／オランダ'},{no:16,name:'渡辺 剛',pos:'DF',club:'フェイエノールト／オランダ'},{no:22,name:'冨安 健洋',pos:'DF',club:'アヤックス／オランダ'},{no:21,name:'伊藤 洋輝',pos:'DF',club:'バイエルン・ミュンヘン／ドイツ'},{no:20,name:'瀬古 歩夢',pos:'DF',club:'ル・アーヴルAC／フランス'},{no:2,name:'菅原 由勢',pos:'DF',club:'ヴェルダー・ブレーメン／ドイツ'},{no:25,name:'鈴木 淳之介',pos:'DF',club:'FCコペンハーゲン／デンマーク'},
+{no:6,name:'遠藤 航',pos:'MF/FW',club:'リバプールFC／イングランド'},{no:14,name:'伊東 純也',pos:'MF/FW',club:'KRCゲンク／ベルギー'},{no:15,name:'鎌田 大地',pos:'MF/FW',club:'クリスタル・パレス／イングランド'},{no:19,name:'小川 航基',pos:'MF/FW',club:'NECナイメヘン／オランダ'},{no:11,name:'前田 大然',pos:'MF/FW',club:'セルティック／スコットランド'},{no:10,name:'堂安 律',pos:'MF/FW',club:'アイントラハト・フランクフルト／ドイツ'},{no:18,name:'上田 綺世',pos:'MF/FW',club:'フェイエノールト／オランダ'},{no:7,name:'田中 碧',pos:'MF/FW',club:'リーズ・ユナイテッド／イングランド'},{no:13,name:'中村 敬斗',pos:'MF/FW',club:'スタッド・ランス／フランス'},{no:24,name:'佐野 海舟',pos:'MF/FW',club:'マインツ05／ドイツ'},{no:8,name:'久保 建英',pos:'MF/FW',club:'レアル・ソシエダード／スペイン'},{no:17,name:'鈴木 唯人',pos:'MF/FW',club:'SCフライブルク／ドイツ'},{no:26,name:'塩貝 健人',pos:'MF/FW',club:'VfLヴォルフスブルク／ドイツ'},{no:9,name:'後藤 啓介',pos:'MF/FW',club:'シントトロイデンVV／ベルギー'}];
+const formations={
+ '3-4-2-1':['GK','LCB','CB','RCB','LWB','LCM','RCM','RWB','LAM','RAM','CF'],
+ '4-2-3-1':['GK','LB','LCB','RCB','RB','LDM','RDM','LW','AM','RW','CF'],
+ '4-3-3':['GK','LB','LCB','RCB','RB','LCM','CM','RCM','LW','CF','RW'],
+ '3-4-3':['GK','LCB','CB','RCB','LWB','LCM','RCM','RWB','LW','CF','RW']
+};
+const coords={GK:[50,91],LCB:[25,75],CB:[50,77],RCB:[75,75],LB:[17,76],RCB:[75,76],RB:[83,76],LWB:[14,55],RWB:[86,55],LCM:[37,55],CM:[50,52],RCM:[63,55],LDM:[38,61],RDM:[62,61],LW:[18,31],RW:[82,31],LAM:[38,36],AM:[50,38],RAM:[62,36],CF:[50,20]};
+let state={name:'',formation:'3-4-2-1',xi:{},bench:Array(9).fill('')};
+function optHtml(){return '<option value="">選択</option>'+players.map(p=>`<option value="${p.no}">${p.no} ${p.name}</option>`).join('')}
+function renderFormation(){const sel=document.getElementById('formation');sel.innerHTML=Object.keys(formations).map(f=>`<option>${f}</option>`).join('');sel.value=state.formation;}
+function renderPitch(){const p=document.getElementById('pitch');p.querySelectorAll('.slot').forEach(e=>e.remove());formations[state.formation].forEach(pos=>{let c=coords[pos]||[50,50];let d=document.createElement('div');d.className='slot';d.style.left=c[0]+'%';d.style.top=c[1]+'%';d.innerHTML=`<div class="slot-label">${pos}</div><select data-pos="${pos}">${optHtml()}</select>`;p.appendChild(d);let s=d.querySelector('select');s.value=state.xi[pos]||'';s.classList.toggle('filled',!!s.value);s.onchange=()=>{state.xi[pos]=s.value;validate();updateSummary();saveSilent();};});validate();}
+function renderBench(){const b=document.getElementById('bench');b.innerHTML='';for(let i=0;i<9;i++){let s=document.createElement('select');s.innerHTML='<option value="">控え '+(i+1)+'</option>'+players.map(p=>`<option value="${p.no}">${p.no} ${p.name}</option>`).join('');s.value=state.bench[i]||'';s.onchange=()=>{state.bench[i]=s.value;validate();updateSummary();saveSilent();};b.appendChild(s)}}
+function renderPlayers(){document.getElementById('players').innerHTML=players.map(p=>`<div class="row"><div class="num">#${p.no}</div><div><div class="name">${p.name}</div><div class="club">${p.club}</div></div><div class="pos">${p.pos}</div></div>`).join('')}
+function selectedNums(){return [...Object.values(state.xi),...state.bench].filter(Boolean)}
+function validate(){document.querySelectorAll('select').forEach(s=>s.classList.remove('dup'));let vals=selectedNums();let dup=vals.filter((v,i,a)=>a.indexOf(v)!==i);document.querySelectorAll('select').forEach(s=>{if(s.value&&dup.includes(s.value))s.classList.add('dup'); if(s.dataset.pos)s.classList.toggle('filled',!!s.value);});}
+function playerName(no){let p=players.find(x=>String(x.no)===String(no));return p?`#${p.no} ${p.name}`:'未選択'}
+function updateSummary(){let lines=[];lines.push(`日本 vs オランダ スタメン案`);lines.push(`参加者：${state.name||'未入力'}`);lines.push(`フォーメーション：${state.formation}`);lines.push('');lines.push('【STARTING XI】');formations[state.formation].forEach(pos=>lines.push(`${pos}: ${playerName(state.xi[pos])}`));lines.push('');lines.push('【BENCH】');state.bench.forEach((n,i)=>lines.push(`${i+1}. ${playerName(n)}`));let chosen=new Set(selectedNums());lines.push('');lines.push(`選択済み：${chosen.size}/20（スタメン11＋控え9）`);document.getElementById('summary').textContent=lines.join('\n');document.getElementById('statusCount').textContent=`${chosen.size}/20`;}
+function saveSilent(){localStorage.setItem('jpn_ned_lineup_v1',JSON.stringify(state));}
+function load(){try{let s=JSON.parse(localStorage.getItem('jpn_ned_lineup_v1')||'null'); if(s)state={...state,...s};}catch(e){}}
+function toast(t){let el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1300)}
+function boot(){load();renderFormation();document.getElementById('memberName').value=state.name;renderPitch();renderBench();renderPlayers();updateSummary();document.getElementById('formation').onchange=e=>{state.formation=e.target.value;state.xi={};renderPitch();updateSummary();saveSilent()};document.getElementById('memberName').oninput=e=>{state.name=e.target.value;updateSummary();saveSilent()};document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');['pitch','bench','summary'].forEach(v=>document.getElementById(v+'View').style.display=t.dataset.view===v?'block':'none');updateSummary();});document.getElementById('saveBtn').onclick=()=>{saveSilent();toast('保存しました')};document.getElementById('copyBtn').onclick=async()=>{updateSummary();await navigator.clipboard.writeText(document.getElementById('summary').textContent);toast('コピーしました')};document.getElementById('resetBtn').onclick=()=>{if(confirm('選択をリセットしますか？')){state={name:state.name,formation:'3-4-2-1',xi:{},bench:Array(9).fill('')};renderFormation();renderPitch();renderBench();updateSummary();saveSilent();}}}
+boot();
+</script>
+</body>
+</html>
